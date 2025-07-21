@@ -11,5 +11,9 @@ mcp-ts/
 
 # How to 
 
+## Run server
+Commande : npm start
+
+
 ## Test
 Commande : npm run test
