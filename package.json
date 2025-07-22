@@ -1,13 +1,13 @@
 {
-  "name": "@ludovic33fr/cds-mcp",
-  "version": "1.0.0",
-  "main": "build/index.js",
+  "name": "@ludovicl33/cds-mcp",
+  "version": "1.0.1",
+  "main": "build/cli-mcp.js",
   "type": "module",
   "bin": {
-    "cds-mcp": "./build/index.js"
+    "cds-mcp": "./build/cli-mcp.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/cli.js', parseInt('755', 8))\"",
+    "build": "tsc && copy src\\cli-mcp.js build\\ && node -e \"require('fs').chmodSync('build/cli-mcp.js', parseInt('755', 8))\"",
     "test": "vitest",
     "start": "node build/index.js",
     "dev": "tsc && node build/index.js",
