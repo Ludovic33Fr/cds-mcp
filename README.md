@@ -110,6 +110,10 @@ const authResult = await authenticateOAuth(
 
 // Le navigateur s'ouvrira automatiquement pour l'authentification
 // L'utilisateur devra saisir ses identifiants sur la page Peaksys
+
+Donnée pour le test oauth2
+login	defiant-orangutan@example.com
+password	Fierce-Kingfisher-16
 ```
 
 ### Recherche de produits

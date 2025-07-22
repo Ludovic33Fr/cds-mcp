@@ -179,8 +179,8 @@ export async function authenticateOAuth(
     code_challenge_method: 'S256'
   });
   
-  const authorizationUrl = `${authUrl}/oauth/authorize?${authParams.toString()}`;
-  
+  // const authorizationUrl = `${authUrl}/oauth/authorize?${authParams.toString()}`;
+  const authorizationUrl = `https://www.oauth.com/playground/auth-dialog.html?${authParams.toString()}`;
   // Step 2: Open browser for user authentication
   console.log(`\nOuverture du navigateur pour l'authentification...`);
   console.log(`URL d'autorisation: ${authorizationUrl}\n`);

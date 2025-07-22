@@ -126,7 +126,6 @@ Image: ${product.media?.[0]?.url}
 Description: ${product.technicalDescription?.fullDescription}
 `.trim();
 }
-
 export async function authenticateOAuth(clientId, clientSecret, redirectUri, scope) {
     const authUrl = 'https://auth.peaksys.com';
     const defaultRedirectUri = redirectUri || 'http://localhost:3000/callback';

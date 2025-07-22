@@ -17,15 +17,15 @@ const server = new McpServer({
 // Register CDiscount tools
 server.tool(
   "GetBestDeliveryInformations",
-  "Get the best delivery information.",
+  "Get the best delivery information for a specific product and location from CDiscount. This method returns shipping details including free shipping status, delivery delays, and pricing information.",
   {
-    productId: z.string().describe("The id of the product"),
-    offerId: z.string().describe("The id of the offer associated to the product"),
-    postalCode: z.string().describe("The postal code for delivery"),
-    longitude: z.number().describe("The longitude of the location to find the delivery information (like : -0.7007206)"),
-    latitude: z.number().describe("The latitude of the location to find the delivery information (like : 44.8996853)"),
-    city: z.string().describe("The name of the city to find the delivery information"),
-    country: z.string().describe("The Code of the country to find the delivery information (like FR for France)"),
+    productId: z.string().describe("The unique identifier of the product on CDiscount"),
+    offerId: z.string().describe("The unique identifier of the specific offer for this product"),
+    postalCode: z.string().describe("The postal code of the delivery address"),
+    longitude: z.number().describe("The longitude coordinate of the delivery location (e.g., -0.7007206 for Paris)"),
+    latitude: z.number().describe("The latitude coordinate of the delivery location (e.g., 44.8996853 for Paris)"),
+    city: z.string().describe("The name of the city for delivery"),
+    country: z.string().describe("The country code for delivery (e.g., FR for France, BE for Belgium)"),
   },
   async ({ productId, offerId, postalCode, longitude, latitude, city, country }) => {
     try {
@@ -62,9 +62,9 @@ server.tool(
 
 server.tool(
   "SearchByKeyWord",
-  "Search a product by keyword.",
+  "Search for products on CDiscount using keywords. This method returns a list of products matching the search criteria with details including product name, price, rating, and availability.",
   {
-    searchWord: z.string().describe("This parameter represent the key word for the search"),
+    searchWord: z.string().describe("The keyword or search term to find products (e.g., 'smartphone', 'laptop', 'headphones')"),
   },
   async ({ searchWord }) => {
     try {
@@ -93,9 +93,9 @@ server.tool(
 
 server.tool(
   "GetProductDetails",
-  "Get product details.",
+  "Get comprehensive product details from CDiscount including price, brand, description, ratings, shipping information, and technical specifications.",
   {
-    productId: z.string().describe("The id of the product to get more details"),
+    productId: z.string().describe("The unique identifier of the product on CDiscount (e.g., 'aaalm03538')"),
   },
   async ({ productId }) => {
     try {
@@ -124,15 +124,15 @@ server.tool(
 
 server.tool(
   "AuthenticateOAuth",
-  "Authenticate using OAuth2 flow with PKCE and return an authentication token.",
-  {
-    clientId: z.string().describe("The OAuth client ID"),
-    clientSecret: z.string().optional().describe("The OAuth client secret (optional for public clients)"),
-    redirectUri: z.string().optional().describe("The redirect URI for OAuth callback"),
-    scope: z.string().optional().describe("The OAuth scope"),
-  },
-  async ({ clientId, clientSecret, redirectUri, scope }) => {
+  "Authenticate using OAuth2 flow with PKCE (Proof Key for Code Exchange) and return an authentication token. This method opens a browser for user login and handles the complete OAuth2 authorization flow securely.",
+  {},
+  async () => {
     try {
+      const clientId = "ftc78cbA5pb2cmjnHS23QAoU";
+      const clientSecret = undefined;
+      const redirectUri = "https://www.oauth.com/playground/authorization-code-with-pkce.html";
+      const scope = "photo";
+
       const result = await authenticateOAuth(clientId, clientSecret, redirectUri, scope);
       
       return {
