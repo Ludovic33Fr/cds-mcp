@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "cdiscount": {
+      "command": "node",
+      "args": ["/chemin/vers/votre/projet/build/index.js"],
+      "env": {}
+    }
+  }
+} 
