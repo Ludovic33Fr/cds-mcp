@@ -1,9 +1,20 @@
-# CDS MCP Server
+# CDiscount MCP Server
+
+[![smithery badge](https://smithery.ai/badge/@Ludovic33Fr/cds-mcp)](https://smithery.ai/server/@Ludovic33Fr/cds-mcp)
 
 Un serveur MCP (Model Context Protocol) pour interagir avec l'API CDiscount et le système d'authentification Peaksys.
 
 ## Installation
 
+### Installing via Smithery
+
+To install CDiscount MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@Ludovic33Fr/cds-mcp):
+
+```bash
+npx -y @smithery/cli install @Ludovic33Fr/cds-mcp --client claude
+```
+
+### Manual Installation
 ```bash
 npm install
 npm run build
