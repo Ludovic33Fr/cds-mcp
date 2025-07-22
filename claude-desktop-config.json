@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "cdiscount-mcp-local": {
+      "command": "node",
+      "args": ["C:/repoPerso/cds-mcp/build/index.js"],
+      "env": {}
+    }
+  }
+} 

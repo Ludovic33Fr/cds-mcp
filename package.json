@@ -1,22 +1,25 @@
 {
   "name": "@ludovic33fr/cds-mcp",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
   "type": "module",
   "bin": {
-    "cds-mcp": "./dist/cli.js"
+    "cds-mcp": "./build/index.js"
   },
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build/cli.js', parseInt('755', 8))\"",
     "test": "vitest",
     "start": "node build/index.js",
     "dev": "tsc && node build/index.js",
-    "test-oauth2": "node test-oauth2.js"
+    "test-oauth2": "node test-oauth2.js",
+    "test-local": "node test-local.js",
+    "test-mcp-client": "node test-mcp-client.js",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["mcp", "cdiscount", "oauth2", "ecommerce", "model-context-protocol"],
+  "author": "Ludovic Lefebvre",
+  "license": "MIT",
+  "description": "MCP server for CDiscount API with OAuth2 authentication and product search capabilities",
   "devDependencies": {
     "@types/node": "^22.10.0",
     "node-fetch": "^3.3.2",
