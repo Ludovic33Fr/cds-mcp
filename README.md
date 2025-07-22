@@ -1,4 +1,4 @@
-# CDiscount MCP Server
+# CDS MCP Server
 
 Un serveur MCP (Model Context Protocol) pour interagir avec l'API CDiscount et le système d'authentification Peaksys.
 
