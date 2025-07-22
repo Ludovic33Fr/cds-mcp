@@ -89,13 +89,12 @@ server.tool("GetProductDetails", "Get comprehensive product details from CDiscou
         };
     }
 });
-server.tool("AuthenticateOAuth", "Authenticate using OAuth2 flow with PKCE (Proof Key for Code Exchange) and return an authentication token. This method opens a browser for user login and handles the complete OAuth2 authorization flow securely.", {
-    clientId: z.string().describe("The OAuth client ID registered with the authentication provider"),
-    clientSecret: z.string().optional().describe("The OAuth client secret (optional - PKCE provides security without requiring a secret)"),
-    redirectUri: z.string().optional().describe("The redirect URI for OAuth callback (default: http://localhost:3000/callback)"),
-    scope: z.string().optional().describe("The OAuth scope defining the permissions requested (default: 'read write')"),
-}, async ({ clientId, clientSecret, redirectUri, scope }) => {
+server.tool("AuthenticateOAuth", "Authenticate using OAuth2 flow with PKCE (Proof Key for Code Exchange) and return an authentication token. This method opens a browser for user login and handles the complete OAuth2 authorization flow securely.", {}, async () => {
     try {
+        const clientId = "ftc78cbA5pb2cmjnHS23QAoU";
+        const clientSecret = undefined;
+        const redirectUri = "https://www.oauth.com/playground/authorization-code-with-pkce.html";
+        const scope = "photo";
         const result = await authenticateOAuth(clientId, clientSecret, redirectUri, scope);
         return {
             content: [
