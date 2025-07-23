@@ -1,6 +1,6 @@
 {
   "name": "@ludovicl33/cds-mcp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "build/cli-mcp.js",
   "type": "module",
   "bin": {
@@ -16,7 +16,13 @@
     "test-mcp-client": "node test-mcp-client.js",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["mcp", "cdiscount", "oauth2", "ecommerce", "model-context-protocol"],
+  "keywords": [
+    "mcp",
+    "cdiscount",
+    "oauth2",
+    "ecommerce",
+    "model-context-protocol"
+  ],
   "author": "Ludovic Lefebvre",
   "license": "MIT",
   "description": "MCP server for CDiscount API with OAuth2 authentication and product search capabilities",
