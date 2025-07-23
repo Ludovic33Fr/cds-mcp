@@ -81,16 +81,31 @@ Récupération des meilleures informations de livraison pour un produit.
 
 ## Configuration MCP
 
-Pour utiliser ce serveur avec un client MCP, ajoutez la configuration suivante :
+Pour utiliser ce serveur avec un client MCP en local, ajoutez la configuration suivante :
 
 ```json
 {
   "mcpServers": {
-    "cdiscount": {
+    "cdiscount-mcp-local": {
       "command": "node",
       "args": ["/path/to/your/dist/index.js"],
       "env": {}
     }
+  }
+}
+```
+
+en distant : 
+
+```json
+{
+  "mcpServers": {
+    "cdiscount-mcp": {
+      "command": "npx",
+      "args": [
+        "@ludovicl33/cds-mcp"
+      ]
+    },
   }
 }
 ```

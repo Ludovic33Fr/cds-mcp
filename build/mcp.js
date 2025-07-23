@@ -69,9 +69,14 @@ export async function searchByKeyword(searchWord) {
     if (res.statusCode !== 200) {
         return `Erreur HTTP : ${res.statusCode}`;
     }
-    const json = await res.body.json();
-    ;
-    if (!json.offers || json.offers.length === 0) {
+    let json;
+    try {
+        json = await res.body.json();
+    }
+    catch (error) {
+        return `Erreur de parsing JSON : ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+    if (!json || !json.offers || json.offers.length === 0) {
         return 'No active tiles for this instance.';
     }
     return json.offers.map((data) => {
@@ -106,24 +111,34 @@ export async function getProductDetails(productId) {
     if (res.statusCode !== 200) {
         return `Erreur HTTP : ${res.statusCode}`;
     }
-    const root = await res.body.json();
-    ;
+    let root;
+    try {
+        root = await res.body.json();
+    }
+    catch (error) {
+        return `Erreur de parsing JSON : ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+    if (!root || Object.keys(root).length === 0) {
+        return 'Aucun produit trouvé avec cet ID.';
+    }
     const product = Object.values(root)[0];
-    ;
+    if (!product) {
+        return 'Aucun produit trouvé avec cet ID.';
+    }
     return `
-ProductId: ${product.productId}
-ProductName: ${product.title}
+ProductId: ${product.productId || 'N/A'}
+ProductName: ${product.title || 'N/A'}
 Price: ${product.prices?.price?.value ?? '?'} €
 StrikedPrice: ${product.strikedPrice ?? 0} €
-Brand: ${product.brandName}
-CDAV Eligible: ${product.isCdav}
-Rating: ${product.ratingAverageOverallRating} / 5 (${product.ratingTotalReviewCount} avis)
-Shipping: ${product.freeShipping}
-Seller: ${product.sellerName}
-CategoryId: ${product.categoryId}
-URL: https:${product.url}
-Image: ${product.media?.[0]?.url}
-Description: ${product.technicalDescription?.fullDescription}
+Brand: ${product.brandName || 'N/A'}
+CDAV Eligible: ${product.isCdav || false}
+Rating: ${product.ratingAverageOverallRating || 0} / 5 (${product.ratingTotalReviewCount || 0} avis)
+Shipping: ${product.freeShipping || false}
+Seller: ${product.sellerName || 'N/A'}
+CategoryId: ${product.categoryId || 'N/A'}
+URL: https:${product.url || ''}
+Image: ${product.media?.[0]?.url || 'N/A'}
+Description: ${product.technicalDescription?.fullDescription || 'Aucune description disponible'}
 `.trim();
 }
 export async function authenticateOAuth(clientId, clientSecret, redirectUri, scope) {
