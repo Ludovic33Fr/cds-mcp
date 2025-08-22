@@ -141,6 +141,17 @@ Image: ${product.media?.[0]?.url || 'N/A'}
 Description: ${product.technicalDescription?.fullDescription || 'Aucune description disponible'}
 `.trim();
 }
+// Variable globale pour activer/désactiver le mode simulation
+let SIMULATION_MODE = true;
+// Fonction pour basculer le mode simulation
+export function setSimulationMode(enabled) {
+    SIMULATION_MODE = enabled;
+    return `🔧 Mode simulation ${enabled ? 'activé' : 'désactivé'}`;
+}
+// Fonction pour vérifier le mode simulation actuel
+export function getSimulationMode() {
+    return `🔧 Mode simulation actuel: ${SIMULATION_MODE ? 'ACTIVÉ' : 'DÉSACTIVÉ'}`;
+}
 export async function authenticateOAuth(clientId, clientSecret, redirectUri, scope) {
     const authUrl = 'https://auth.peaksys.com';
     const defaultRedirectUri = redirectUri || 'http://localhost:3000/callback';
@@ -162,6 +173,31 @@ export async function authenticateOAuth(clientId, clientSecret, redirectUri, sco
     });
     // const authorizationUrl = `${authUrl}/oauth/authorize?${authParams.toString()}`;
     const authorizationUrl = `https://www.oauth.com/playground/auth-dialog.html?${authParams.toString()}`;
+    if (SIMULATION_MODE) {
+        console.log(`\n🔧 MODE SIMULATION ACTIVÉ`);
+        console.log(`📝 Simulation de l'authentification OAuth2...`);
+        console.log(`⏳ Attente simulée de 3 secondes...\n`);
+        // Simulation d'attente
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        console.log(`✅ Authentification simulée réussie !`);
+        console.log(`🎭 Retour du token factice...\n`);
+        return `
+🔧 AUTHENTIFICATION OAUTH2 SIMULÉE
+
+✅ Authentification réussie (simulation) !
+
+Access Token: FakeTokenCDS
+Token Type: Bearer
+Expires In: 3600 secondes (1 heure)
+Scope: ${defaultScope}
+Refresh Token: FakeRefreshTokenCDS
+
+📝 Note: Ce token est factice et généré en mode simulation.
+   L'authentification ADB2C réelle n'a pas été effectuée.
+   
+🔧 Pour désactiver le mode simulation, modifiez SIMULATION_MODE = false
+`.trim();
+    }
     // Step 2: Open browser for user authentication
     console.log(`\nOuverture du navigateur pour l'authentification...`);
     console.log(`URL d'autorisation: ${authorizationUrl}\n`);
@@ -221,7 +257,7 @@ Code d'autorisation échangé avec succès
 `.trim();
     }
     catch (error) {
-        return `Erreur lors de l'échange du token : ${error instanceof Error ? error.message : 'Erreur inconnue'}`;
+        return `Erreur lors de l'échange du code d'autorisation : ${error instanceof Error ? error.message : 'Unknown error'}`;
     }
 }
 // Helper functions for OAuth2 PKCE flow
@@ -320,6 +356,12 @@ async function startCallbackServer(redirectUri, expectedState) {
     });
 }
 async function waitForAuthorizationCode(callbackServer) {
+    if (SIMULATION_MODE) {
+        console.log('🔧 Mode simulation: génération d\'un code d\'autorisation factice...');
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation d'attente
+        console.log('✅ Code d\'autorisation factice généré !');
+        return 'fake_auth_code_12345';
+    }
     console.log('En attente de l\'authentification utilisateur...');
     console.log('Veuillez vous connecter dans le navigateur qui s\'est ouvert.\n');
     try {
@@ -335,4 +377,114 @@ async function waitForAuthorizationCode(callbackServer) {
         console.log(`Erreur lors de l'attente du callback: ${error}`);
         return null;
     }
+}
+export async function getOAuthProtectedCommands(accessToken) {
+    // Simuler une vérification du token
+    if (!accessToken) {
+        return `
+🔒 COMMANDES PROTÉGÉES PAR OAUTH2
+
+❌ Token d'accès manquant
+⚠️  Vous devez d'abord vous authentifier avec la méthode AuthenticateOAuth
+
+📋 Commandes disponibles (nécessitent un token valide) :
+• getUserProfile() - Récupérer le profil utilisateur
+• getUserOrders() - Récupérer l'historique des commandes
+• getUserWishlist() - Récupérer la liste de souhaits
+• getUserAddresses() - Récupérer les adresses enregistrées
+• getUserPreferences() - Récupérer les préférences utilisateur
+• createOrder() - Créer une nouvelle commande
+• updateUserProfile() - Mettre à jour le profil utilisateur
+• deleteUserAddress() - Supprimer une adresse
+• addToWishlist() - Ajouter un produit à la liste de souhaits
+• removeFromWishlist() - Retirer un produit de la liste de souhaits
+
+🔐 Pour obtenir un token d'accès :
+1. Utilisez la méthode AuthenticateOAuth
+2. Suivez le processus d'authentification dans le navigateur
+3. Récupérez le token d'accès depuis la réponse
+4. Utilisez ce token pour accéder aux commandes protégées
+`.trim();
+    }
+    // Simuler des données mockées avec un token valide
+    return `
+🔓 COMMANDES PROTÉGÉES PAR OAUTH2
+
+✅ Token d'accès valide détecté
+🎯 Données mockées disponibles :
+
+👤 PROFIL UTILISATEUR :
+• ID: user_12345
+• Email: utilisateur@example.com
+• Nom: Jean Dupont
+• Prénom: Jean
+• Date de naissance: 15/03/1985
+• Téléphone: +33 6 12 34 56 78
+• Statut: Actif
+• Date d'inscription: 2023-01-15
+
+📦 HISTORIQUE DES COMMANDES (dernières 5) :
+1. Commande #CDS-2024-001234 (15/01/2024)
+   - iPhone 14 Pro 256GB - 899,99€
+   - Statut: Livré
+   
+2. Commande #CDS-2024-001156 (10/01/2024)
+   - Samsung Galaxy S24 - 799,99€
+   - Statut: En cours de livraison
+   
+3. Commande #CDS-2023-009876 (28/12/2023)
+   - AirPods Pro 2 - 249,99€
+   - Statut: Livré
+   
+4. Commande #CDS-2023-009543 (20/12/2023)
+   - iPad Air 64GB - 649,99€
+   - Statut: Livré
+   
+5. Commande #CDS-2023-009123 (15/12/2023)
+   - MacBook Air M2 - 1299,99€
+   - Statut: Livré
+
+💝 LISTE DE SOUHAITS :
+• iPhone 15 Pro Max 256GB - 1199,99€
+• Apple Watch Series 9 - 399,99€
+• AirPods Max - 549,99€
+• iPad Pro 12.9" M2 - 1099,99€
+• MacBook Pro 14" M3 - 1999,99€
+
+🏠 ADRESSES ENREGISTRÉES :
+1. Adresse principale :
+   - 123 Rue de la Paix
+   - 75001 Paris, France
+   - Tél: +33 1 23 45 67 89
+   
+2. Adresse de livraison :
+   - 456 Avenue des Champs
+   - 69001 Lyon, France
+   - Tél: +33 4 56 78 90 12
+
+⚙️ PRÉFÉRENCES UTILISATEUR :
+• Langue: Français
+• Devise: EUR
+• Notifications email: Activées
+• Notifications push: Activées
+• Newsletter: Désactivée
+• Mode sombre: Activé
+• Taille de police: Moyenne
+
+🔧 COMMANDES DISPONIBLES :
+• getUserProfile() - ✅ Disponible
+• getUserOrders() - ✅ Disponible  
+• getUserWishlist() - ✅ Disponible
+• getUserAddresses() - ✅ Disponible
+• getUserPreferences() - ✅ Disponible
+• createOrder() - ✅ Disponible
+• updateUserProfile() - ✅ Disponible
+• deleteUserAddress() - ✅ Disponible
+• addToWishlist() - ✅ Disponible
+• removeFromWishlist() - ✅ Disponible
+
+💡 Note: Ces données sont mockées pour la démonstration.
+   En production, elles seraient récupérées depuis l'API CDiscount
+   en utilisant le token d'accès OAuth2.
+`.trim();
 }

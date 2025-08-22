@@ -2,7 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { getBestDeliveryInformations, searchByKeyword, getProductDetails, authenticateOAuth } from './mcp.js';
+import { getBestDeliveryInformations, searchByKeyword, getProductDetails, authenticateOAuth, getOAuthProtectedCommands } from './mcp.js';
 // Create server instance
 const server = new McpServer({
     name: "cdiscount-mcp",
@@ -94,9 +94,34 @@ server.tool("AuthenticateOAuth", "Authenticate using OAuth2 flow with PKCE (Proo
     try {
         const clientId = "ftc78cbA5pb2cmjnHS23QAoU";
         const clientSecret = undefined;
-        const redirectUri = "https://www.oauth.com/playground/authorization-code-with-pkce.html";
+        const redirectUri = "http://localhost:3000/callback";
         const scope = "photo";
         const result = await authenticateOAuth(clientId, clientSecret, redirectUri, scope);
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: result,
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                },
+            ],
+        };
+    }
+});
+server.tool("GetOAuthProtectedCommands", "Get a list of OAuth2-protected commands and mock data that require authentication token. This method demonstrates what user-specific data would be available after successful OAuth2 authentication, including user profile, orders, wishlist, addresses, and preferences.", {
+    accessToken: z.string().optional().describe("The OAuth2 access token obtained from AuthenticateOAuth method. If not provided, shows available commands without data."),
+}, async ({ accessToken }) => {
+    try {
+        const result = await getOAuthProtectedCommands(accessToken);
         return {
             content: [
                 {
