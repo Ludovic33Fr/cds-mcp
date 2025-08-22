@@ -48,7 +48,7 @@ export async function searchByKeyword(searchWord: string): Promise<string> {
   const body = {
     departmentId: '10',
     extendedPropertyKeys: ['DesactivateH1'],
-    filterIds: ['navigation/"07/0703/070302"'],
+    filterIds: ['categorycodepath/"07/0703/070302"'],
     isDidYouMeanSelected: false,
     isQuickFacetsImageButtonActive: false,
     isRerankingSdxEnabled: null,
@@ -176,12 +176,12 @@ let SIMULATION_MODE = true;
 // Fonction pour basculer le mode simulation
 export function setSimulationMode(enabled: boolean): string {
   SIMULATION_MODE = enabled;
-  return `🔧 Mode simulation ${enabled ? 'activé' : 'désactivé'}`;
+  return `SimulationMode: ${enabled}`;
 }
 
 // Fonction pour vérifier le mode simulation actuel
 export function getSimulationMode(): string {
-  return `🔧 Mode simulation actuel: ${SIMULATION_MODE ? 'ACTIVÉ' : 'DÉSACTIVÉ'}`;
+  return `SimulationMode: ${SIMULATION_MODE}`;
 }
 
 export async function authenticateOAuth(
@@ -227,20 +227,12 @@ export async function authenticateOAuth(
     console.log(`🎭 Retour du token factice...\n`);
     
     return `
-🔧 AUTHENTIFICATION OAUTH2 SIMULÉE
-
-✅ Authentification réussie (simulation) !
-
-Access Token: FakeTokenCDS
-Token Type: Bearer
-Expires In: 3600 secondes (1 heure)
+AccessToken: FakeTokenCDS
+TokenType: Bearer
+ExpiresIn: 3600
 Scope: ${defaultScope}
-Refresh Token: FakeRefreshTokenCDS
-
-📝 Note: Ce token est factice et généré en mode simulation.
-   L'authentification ADB2C réelle n'a pas été effectuée.
-   
-🔧 Pour désactiver le mode simulation, modifiez SIMULATION_MODE = false
+RefreshToken: FakeRefreshTokenCDS
+SimulationMode: true
 `.trim();
   }
   
@@ -301,16 +293,13 @@ Refresh Token: FakeRefreshTokenCDS
     const tokenData = await res.body.json() as any;
     
     return `
-Authentification OAuth2 réussie !
-
-Access Token: ${tokenData.access_token || 'Non disponible'}
-Token Type: ${tokenData.token_type || 'Bearer'}
-Expires In: ${tokenData.expires_in || 'Non spécifié'} secondes
+AccessToken: ${tokenData.access_token || 'Non disponible'}
+TokenType: ${tokenData.token_type || 'Bearer'}
+ExpiresIn: ${tokenData.expires_in || 'Non spécifié'}
 Scope: ${tokenData.scope || defaultScope}
-Refresh Token: ${tokenData.refresh_token || 'Non disponible'}
-
-URL d'autorisation utilisée: ${authorizationUrl}
-Code d'autorisation échangé avec succès
+RefreshToken: ${tokenData.refresh_token || 'Non disponible'}
+AuthorizationUrl: ${authorizationUrl}
+SimulationMode: false
 `.trim();
     
   } catch (error) {
@@ -454,110 +443,29 @@ export async function getOAuthProtectedCommands(accessToken?: string): Promise<s
   // Simuler une vérification du token
   if (!accessToken) {
     return `
-🔒 COMMANDES PROTÉGÉES PAR OAUTH2
-
-❌ Token d'accès manquant
-⚠️  Vous devez d'abord vous authentifier avec la méthode AuthenticateOAuth
-
-📋 Commandes disponibles (nécessitent un token valide) :
-• getUserProfile() - Récupérer le profil utilisateur
-• getUserOrders() - Récupérer l'historique des commandes
-• getUserWishlist() - Récupérer la liste de souhaits
-• getUserAddresses() - Récupérer les adresses enregistrées
-• getUserPreferences() - Récupérer les préférences utilisateur
-• createOrder() - Créer une nouvelle commande
-• updateUserProfile() - Mettre à jour le profil utilisateur
-• deleteUserAddress() - Supprimer une adresse
-• addToWishlist() - Ajouter un produit à la liste de souhaits
-• removeFromWishlist() - Retirer un produit de la liste de souhaits
-
-🔐 Pour obtenir un token d'accès :
-1. Utilisez la méthode AuthenticateOAuth
-2. Suivez le processus d'authentification dans le navigateur
-3. Récupérez le token d'accès depuis la réponse
-4. Utilisez ce token pour accéder aux commandes protégées
+Status: Error
+Message: Token d'accès manquant
+RequiredAction: AuthenticateOAuth
+AvailableCommands: getUserProfile,getUserOrders,getUserWishlist,getUserAddresses,getUserPreferences,createOrder,updateUserProfile,deleteUserAddress,addToWishlist,removeFromWishlist
 `.trim();
   }
 
   // Simuler des données mockées avec un token valide
   return `
-🔓 COMMANDES PROTÉGÉES PAR OAUTH2
-
-✅ Token d'accès valide détecté
-🎯 Données mockées disponibles :
-
-👤 PROFIL UTILISATEUR :
-• ID: user_12345
-• Email: utilisateur@example.com
-• Nom: Jean Dupont
-• Prénom: Jean
-• Date de naissance: 15/03/1985
-• Téléphone: +33 6 12 34 56 78
-• Statut: Actif
-• Date d'inscription: 2023-01-15
-
-📦 HISTORIQUE DES COMMANDES (dernières 5) :
-1. Commande #CDS-2024-001234 (15/01/2024)
-   - iPhone 14 Pro 256GB - 899,99€
-   - Statut: Livré
-   
-2. Commande #CDS-2024-001156 (10/01/2024)
-   - Samsung Galaxy S24 - 799,99€
-   - Statut: En cours de livraison
-   
-3. Commande #CDS-2023-009876 (28/12/2023)
-   - AirPods Pro 2 - 249,99€
-   - Statut: Livré
-   
-4. Commande #CDS-2023-009543 (20/12/2023)
-   - iPad Air 64GB - 649,99€
-   - Statut: Livré
-   
-5. Commande #CDS-2023-009123 (15/12/2023)
-   - MacBook Air M2 - 1299,99€
-   - Statut: Livré
-
-💝 LISTE DE SOUHAITS :
-• iPhone 15 Pro Max 256GB - 1199,99€
-• Apple Watch Series 9 - 399,99€
-• AirPods Max - 549,99€
-• iPad Pro 12.9" M2 - 1099,99€
-• MacBook Pro 14" M3 - 1999,99€
-
-🏠 ADRESSES ENREGISTRÉES :
-1. Adresse principale :
-   - 123 Rue de la Paix
-   - 75001 Paris, France
-   - Tél: +33 1 23 45 67 89
-   
-2. Adresse de livraison :
-   - 456 Avenue des Champs
-   - 69001 Lyon, France
-   - Tél: +33 4 56 78 90 12
-
-⚙️ PRÉFÉRENCES UTILISATEUR :
-• Langue: Français
-• Devise: EUR
-• Notifications email: Activées
-• Notifications push: Activées
-• Newsletter: Désactivée
-• Mode sombre: Activé
-• Taille de police: Moyenne
-
-🔧 COMMANDES DISPONIBLES :
-• getUserProfile() - ✅ Disponible
-• getUserOrders() - ✅ Disponible  
-• getUserWishlist() - ✅ Disponible
-• getUserAddresses() - ✅ Disponible
-• getUserPreferences() - ✅ Disponible
-• createOrder() - ✅ Disponible
-• updateUserProfile() - ✅ Disponible
-• deleteUserAddress() - ✅ Disponible
-• addToWishlist() - ✅ Disponible
-• removeFromWishlist() - ✅ Disponible
-
-💡 Note: Ces données sont mockées pour la démonstration.
-   En production, elles seraient récupérées depuis l'API CDiscount
-   en utilisant le token d'accès OAuth2.
+Status: Success
+TokenValid: true
+UserId: user_12345
+UserEmail: utilisateur@example.com
+UserName: Jean Dupont
+UserFirstName: Jean
+UserBirthDate: 1985-03-15
+UserPhone: +33 6 12 34 56 78
+UserStatus: Active
+UserRegistrationDate: 2023-01-15
+OrdersCount: 5
+WishlistCount: 5
+AddressesCount: 2
+AvailableCommands: getUserProfile,getUserOrders,getUserWishlist,getUserAddresses,getUserPreferences,createOrder,updateUserProfile,deleteUserAddress,addToWishlist,removeFromWishlist
+SimulationMode: true
 `.trim();
 }

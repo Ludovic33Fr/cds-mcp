@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2024-12-19
+
+### 🔧 Enhanced
+- **Protocole MCP standardisé** : Toutes les fonctions retournent maintenant un format cohérent avec le protocole MCP
+- **Format de sortie uniforme** : Structure clé-valeur simple et lisible pour toutes les réponses
+- **Authentification OAuth2** : Format de retour standardisé avec `AccessToken: FakeTokenCDS`
+- **Commandes protégées** : Format structuré pour les données utilisateur et les erreurs
+- **Mode simulation** : Contrôle simplifié avec format MCP standard
+
+### 📝 Format MCP standardisé
+- **authenticateOAuth** : `AccessToken: FakeTokenCDS`, `TokenType: Bearer`, `ExpiresIn: 3600`
+- **getOAuthProtectedCommands** : `Status: Success/Error`, `TokenValid: true/false`, `UserId: user_12345`
+- **setSimulationMode/getSimulationMode** : `SimulationMode: true/false`
+- **Structure uniforme** : Format clé-valeur sans emojis ni formatage complexe
+
+### 🎯 Conformité MCP
+- **Format simple** : Paires clé-valeur séparées par des retours à la ligne
+- **Lisibilité** : Structure claire et facile à parser
+- **Cohérence** : Toutes les fonctions suivent le même format
+- **Standards** : Respect des conventions du protocole MCP
+
+### 🧪 Tests
+- **4 tests passent** sur 4
+- **Validation du format MCP** : Vérification de la structure des réponses
+- **Cohérence** : Toutes les fonctions testées respectent le même format
+
 ## [1.1.0] - 2024-12-19
 
 ### 🆕 Added
@@ -51,6 +77,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## Notes de version
+
+### Version 1.2.0
+Cette version standardise complètement le format de sortie pour respecter le protocole MCP. Toutes les fonctions retournent maintenant un format structuré simple et cohérent, facilitant l'intégration avec les clients MCP et améliorant la lisibilité des réponses.
 
 ### Version 1.1.0
 Cette version introduit un **mode simulation OAuth2** révolutionnaire qui permet de développer et tester l'authentification sans attendre la configuration complète d'Azure AD B2C. Le mode simulation génère un token factice "FakeTokenCDS" et fournit des données mockées complètes pour accélérer le développement.
